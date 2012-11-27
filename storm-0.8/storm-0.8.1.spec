@@ -81,7 +81,7 @@ Summary: Storm Dev Zookeeper bundled with Storm - only for development purposes!
 Group: System/Daemons
 Requires: %{name} = %{version}-%{release}
 BuildArch: noarch
-%description supervisor
+%description zookeeper
 Storm Dev Zookeeper bundled with Storm - only for development purposes!
 
 %prep
