@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# /etc/init.d/storm-zookeeper
+#
+# Startup script for storm-zookeeper
+# 
+# chkconfig: 2345 20 80
+# description: Starts and stops storm-zookeeper
+. /etc/init.d/functions
+stormBin=/opt/storm/bin/storm
+stormSvc=$(echo $0 | cut -d'-' -f2)
+desc="Storm $stormSvc daemon"
+outFile="/var/log/storm/storm-$stormSvc.out"
+
+if ! [ -f $stormBin ]; then
+  echo "storm binary not found."
+  exit 5
+fi
+
+if [ -f /etc/sysconfig/storm ]; then
+  . /etc/sysconfig/storm
+fi
+
+start() {
+  echo "Starting $desc (storm-$stormSvc): "
+  su $stormUser -c "nohup storm dev-zookeeper >>$outFile 2>&1 &"
+  RETVAL=$?
+  return $RETVAL
+}
+
+stop() {
+  echo "Shutting down $desc (storm-$stormSvc): "
+  pkill -f backtype.storm.command.dev_zookeeper
+}
+
+restart() {
+    stop
+    start
+}
+
+status() {
+  pid=$(pgrep -f backtype.storm.command.dev_zookeeper)
+    
+  if [ -z $pid ]; then
+    echo "storm-$stormSvc is NOT running."
+  else
+    echo "storm-$stormSvc is running (pid is $pid)."
+  fi
+
+}
+
+case "$1" in
+  start)   start;;
+  stop)    stop;;
+  restart) restart;;
+  status)  status;;
+  *)       echo "Usage: $0 {start|stop|restart}"
+           RETVAL=2;;
+esac
+exit $RETVAL

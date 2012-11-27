@@ -8,6 +8,7 @@
 # wget https://raw.github.com/nmilford/specfiles/master/storm-0.8/storm-nimbus -O ~/rpmbuild/SOURCES/storm-nimbus
 # wget https://raw.github.com/nmilford/specfiles/master/storm-0.8/storm-supervisor -O ~/rpmbuild/SOURCES/storm-supervisor
 # wget https://raw.github.com/nmilford/specfiles/master/storm-0.8/storm-ui -O ~/rpmbuild/SOURCES/storm-ui
+# wget https://raw.github.com/dartov/specfiles/master/storm-0.8/storm-zookeeper -O ~/rpmbuild/SOURCES/storm-zookeeper
 # wget https://raw.github.com/nmilford/specfiles/master/storm-0.8/storm.nofiles.conf -O ~/rpmbuild/SOURCES/storm.nofiles.conf
 # 
 # rpmbuild -bb ~/rpmbuild/SPECS/storm-0.8.spec
@@ -15,7 +16,7 @@
 %define storm_name storm
 %define storm_branch 0.8
 %define storm_version 0.8.1
-%define release_version 1
+%define release_version 2
 %define storm_home /opt/%{storm_name}-%{storm_version}
 %define etc_storm /etc/%{name}
 %define config_storm %{etc_storm}/conf
@@ -33,8 +34,9 @@ Source0: %{storm_name}-%{storm_version}.zip
 Source1: storm-nimbus
 Source2: storm-ui
 Source3: storm-supervisor
-Source4: storm
-Source5: storm.nofiles.conf
+Source4: storm-zookeeper
+Source5: storm
+Source6: storm.nofiles.conf
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 Requires: sh-utils, textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
 Provides: storm
@@ -73,6 +75,14 @@ BuildArch: noarch
 %description supervisor
 The Supervisor listens for work assigned to its machine and starts and stops
 worker processes as necessary based on what Nimbus has assigned to it.
+
+%package zookeeper
+Summary: Storm Dev Zookeeper bundled with Storm - only for development purposes!
+Group: System/Daemons
+Requires: %{name} = %{version}-%{release}
+BuildArch: noarch
+%description supervisor
+Storm Dev Zookeeper bundled with Storm - only for development purposes!
 
 %prep
 %setup -n %{storm_name}-%{storm_version}
@@ -131,6 +141,7 @@ install -d -m 755 %{buildroot}/%{_initrddir}
 install    -m 755 %_sourcedir/storm-nimbus     %{buildroot}/%{_initrddir}/storm-nimbus
 install    -m 755 %_sourcedir/storm-ui         %{buildroot}/%{_initrddir}/storm-ui
 install    -m 755 %_sourcedir/storm-supervisor %{buildroot}/%{_initrddir}/storm-supervisor
+install    -m 755 %_sourcedir/storm-zookeeper  %{buildroot}/%{_initrddir}/storm-zookeeper
 install -d -m 755 %{buildroot}/%{_sysconfdir}/sysconfig
 install    -m 644 %_sourcedir/storm            %{buildroot}/%{_sysconfdir}/sysconfig/storm
 install -d -m 755 %{buildroot}/%{_sysconfdir}/security/limits.d/
@@ -190,8 +201,12 @@ fi
 %service_macro nimbus
 %service_macro ui
 %service_macro supervisor
+%service_macro zookeeper
+
 
 %changelog
+* Tue Nov 27 2012 Anton Zadorozhniy <anton.zadorozhniy@gmail.com> - 0.8.1
+- Added dev-zookeeper
 * Tue Nov 27 2012 Anton Zadorozhniy <anton.zadorozhniy@gmail.com> - 0.8.1
 - Storm 0.8.1
 * Wed Aug 08 2012 Nathan Milford <nathan@milford.io> - 0.8.0
