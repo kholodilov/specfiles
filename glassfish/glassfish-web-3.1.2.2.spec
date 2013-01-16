@@ -8,6 +8,8 @@
 #
 # rpmbuild -bb ~/rpmbuild/SPECS/glassfish-web-3.1.2.2.spec
 
+%define __jar_repack %{nil}
+
 %define glassfish_name glassfish-web
 %define glassfish_version 3.1.2.2
 %define release_version 1
