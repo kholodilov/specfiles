@@ -2,26 +2,37 @@
 #
 # glassfish	startup script for Glassfish Application Server.
 #
+# chkconfig:   - 20 80
+# description: Starts and stops the Glassfish domain.
 
-GLASSFISH_HOME=/opt/glassfish-web/
 GLASSFISH_OWNER=glassfish
 
 start() {
         echo -n "Starting Glassfish: "
-        su $GLASSFISH_OWNER -c "$GLASSFISH_HOME/bin/asadmin start-domain"
+        su $GLASSFISH_OWNER -c "asadmin start-domain"
         echo "done"
 }
 
 stop() {
         echo -n "Stopping Glassfish: "
-        su $GLASSFISH_OWNER -c "$GLASSFISH_HOME/bin/asadmin stop-domain"
+        su $GLASSFISH_OWNER -c "asadmin stop-domain"
         echo "done"
 }
 
 restart() {
         echo -n "Restarting Glassfish: "
-        su $GLASSFISH_OWNER -c "$GLASSFISH_HOME/bin/asadmin restart-domain" 
+        su $GLASSFISH_OWNER -c "asadmin restart-domain" 
         echo "done"
+}
+
+status() {
+        su $GLASSFISH_OWNER -c "asadmin list-domains" | grep "not running"
+        if [ $? -eq 1 ]; then
+                echo "Glassfish is running"
+                return 0                
+        fi
+        echo "Glassfish is not running"
+        return 1
 }
 
 case "$1" in
@@ -34,7 +45,10 @@ case "$1" in
         restart)
                 restart
                 ;;
+        status)
+                status
+                ;;
         *)
-                echo $"Usage: glassfish {start|stop|restart}"
+                echo $"Usage: glassfish-web {start|stop|restart|status}"
                 exit
 esac

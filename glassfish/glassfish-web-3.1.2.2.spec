@@ -13,7 +13,7 @@
 
 %define glassfish_name glassfish-web
 %define glassfish_version 3.1.2.2
-%define release_version 3
+%define release_version 4
 %define glassfish_parent /opt
 %define glassfish_home %{glassfish_parent}/%{glassfish_name}
 %define glassfish_user glassfish
@@ -83,6 +83,8 @@ fi
 %{_bindir}/asadmin
 
 %changelog
+* Tue Jan 18 2013 - Dmitry Kholodilov <dmitry.kholodilov@gmail.com>
+- Enable status reporting and chkconfig for daemon
 * Tue Jan 18 2013 - Dmitry Kholodilov <dmitry.kholodilov@gmail.com>
 - Correctly create home directory for glassfish user
 * Tue Jan 17 2013 - Dmitry Kholodilov <dmitry.kholodilov@gmail.com>
