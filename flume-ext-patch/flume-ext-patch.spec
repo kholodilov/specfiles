@@ -14,7 +14,7 @@
 
 Name: flume-ext-patch
 Version: 1.0.0
-Release: 1
+Release: 2
 Summary: Megafon Data Labs Flume-NG extensions
 License: Proprietary
 Group: Development/System
@@ -42,20 +42,23 @@ mkdir -p %{buildroot}/%{flume_lib_directory}
 cp %{_builddir}/%{name}-%{version}/* %{buildroot}/%{flume_lib_directory}
 
 %pre
-mkdir %{flume_lib_backup_directory}
-mv %{flume_lib_directory}/libthrift-* %{flume_lib_backup_directory}
+rm -rf %{flume_lib_backup_directory}
+mkdir -p %{flume_lib_backup_directory}
+mv -f %{flume_lib_directory}/libthrift-0.6.1.jar %{flume_lib_backup_directory}
 
 %post
 
 %preun
 
 %postun
-mv %{flume_lib_backup_directory}/* %{flume_lib_directory}
-rmdir %{flume_lib_backup_directory}
+mv -n %{flume_lib_backup_directory}/* %{flume_lib_directory}
+rm -rf %{flume_lib_backup_directory}
 
 %files
 %{flume_lib_directory}/*
 
 %changelog
+* Tue Jan 22 2013 - Dmitry Kholodilov <dmitry.kholodilov@gmail.com>
+- Adjusted pre/post actions
 * Tue Jan 21 2013 - Dmitry Kholodilov <dmitry.kholodilov@gmail.com>
 - Initial version
