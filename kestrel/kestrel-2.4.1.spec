@@ -7,7 +7,7 @@
 %define kestrel_branch 2.4
 %define kestrel_version 2.4.1
 %define scala_version 2.9.2
-%define release_version 1
+%define release_version 2
 %define kestrel_home /usr/local/%{kestrel_name}/%{kestrel_name}_%{scala_version}-%{kestrel_version}
 %define kestrel_user kestrel
 %define kestrel_group kestrel
@@ -20,6 +20,7 @@ License: Apache License 2.0
 URL: http://robey.github.com/kestrel/
 Group: Development/Libraries
 Source0: %{kestrel_name}-%{kestrel_version}.zip
+Source1: %{kestrel_name}.sh
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u} -n)
 Requires: sh-utils, textutils, /usr/sbin/useradd, /usr/sbin/usermod, /sbin/chkconfig, /sbin/service
 Provides: kestrel
@@ -61,7 +62,7 @@ ln -s %{kestrel_name}_%{scala_version}-%{kestrel_version} current
 cd -
 
 install -d -m 755 %{buildroot}/%{_initrddir}
-install    -m 755 %{_builddir}/%{kestrel_name}-%{kestrel_version}/scripts/kestrel.sh           	%{buildroot}/%{_initrddir}/kestrel
+install    -m 755 %{_sourcedir}/kestrel.sh           	%{buildroot}/%{_initrddir}/kestrel
 
 install -d -m 755 %{buildroot}/var/run/%{kestrel_name}
 install -d -m 755 %{buildroot}/var/log/%{kestrel_name}
@@ -86,5 +87,7 @@ fi
 /var/run/%{kestrel_name}
 
 %changelog
+* Sun Jan 27 2013 - Dmitry Kholodilov <dmitry.kholodilov@gmail.com>
+- Fix exit code for kestrel service status request
 * Tue Jan 15 2013 - Anton Zadorozhniy <anton.zadorozhniy@gmail.com>
 - Initial release.
